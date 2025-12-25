@@ -97,8 +97,9 @@ function drawRunner() {
     // 다리 애니메이션
     const legAngle = runner.isJumping ? 0.3 : Math.sin(runner.frameIndex * 0.8) * 0.5;
 
-    ctx.strokeStyle = '#F5CBA7';
-    ctx.lineWidth = 6;
+    // 바지 (검은색)
+    ctx.strokeStyle = '#1a1a1a';
+    ctx.lineWidth = 8;
 
     // 왼쪽 다리
     ctx.beginPath();
@@ -231,7 +232,7 @@ function drawTrack() {
     ctx.strokeStyle = '#FFF';
     ctx.lineWidth = 3;
     ctx.setLineDash([30, 20]);
-    ctx.lineDashOffset = -trackOffset;
+    ctx.lineDashOffset = trackOffset;
 
     // 레인 구분선
     for (let i = 0; i < 3; i++) {
@@ -258,11 +259,13 @@ function drawCloud(x, y, width) {
 }
 
 // 허들 생성
-function createHurdle() {
-    const minGap = 300;
-    const maxGap = 500;
+let nextHurdleGap = 400; // 다음 허들까지의 간격
 
-    if (hurdles.length === 0 || hurdles[hurdles.length - 1].x < canvas.width - minGap - Math.random() * (maxGap - minGap)) {
+function createHurdle() {
+    const minGap = 200;
+    const maxGap = 600;
+
+    if (hurdles.length === 0) {
         hurdles.push({
             x: canvas.width,
             y: 218,
@@ -270,6 +273,17 @@ function createHurdle() {
             height: 50,
             passed: false
         });
+        nextHurdleGap = minGap + Math.random() * (maxGap - minGap);
+    } else if (hurdles[hurdles.length - 1].x < canvas.width - nextHurdleGap) {
+        hurdles.push({
+            x: canvas.width,
+            y: 218,
+            width: 40,
+            height: 50,
+            passed: false
+        });
+        // 다음 허들 간격을 랜덤하게 설정
+        nextHurdleGap = minGap + Math.random() * (maxGap - minGap);
     }
 }
 
